@@ -3,7 +3,7 @@ import { Command } from "commander";
 
 const MODULES = [
   ["lib", ["config", "logger", "data"]],
-  ["commands", ["init", "auth"]],
+  ["commands", ["init", "auth", "notifications"]],
 ];
 
 async function main() {
