@@ -1,9 +1,8 @@
 import { URL } from "url";
-import axios from "axios";
 import config from "../lib/config.js";
 import logger from "../lib/logger.js";
 import { Client, AuthedClient } from "../lib/client.js";
-import { OAUTH_SCOPES } from "../lib/constants.js";
+import { OAUTH_SCOPES, REDIRECT_URI_OOB } from "../lib/constants.js";
 
 export function init({ program }) {
   const authCommand = program.command("auth").description("auth operations");
@@ -40,7 +39,7 @@ async function runRegister() {
     data: {
       client_name: BOT_NAME,
       website: BOT_WEBSITE,
-      redirect_uris: "urn:ietf:wg:oauth:2.0:oob",
+      redirect_uris: REDIRECT_URI_OOB,
       scopes: OAUTH_SCOPES,
     },
   });
@@ -67,7 +66,7 @@ async function runLink() {
   const params = {
     client_id: CLIENT_ID,
     scope: OAUTH_SCOPES,
-    redirect_uri: "urn:ietf:wg:oauth:2.0:oob",
+    redirect_uri: REDIRECT_URI_OOB,
     response_type: "code",
   };
   for (const [name, value] of Object.entries(params)) {
@@ -90,7 +89,7 @@ async function runCode(code) {
         client_id: CLIENT_ID,
         client_secret: CLIENT_SECRET,
         scopes: OAUTH_SCOPES,
-        redirect_uri: "urn:ietf:wg:oauth:2.0:oob",
+        redirect_uri: REDIRECT_URI_OOB,
         grant_type: "authorization_code",
         code,
       },
