@@ -1,5 +1,5 @@
 import { URL } from "url";
-import config from "../lib/config.js";
+import config, { updateDataConfig } from "../lib/config.js";
 import logger from "../lib/logger.js";
 import { Client, AuthedClient } from "../lib/client.js";
 import { OAUTH_SCOPES, REDIRECT_URI_OOB } from "../lib/constants.js";
@@ -9,12 +9,12 @@ export function init({ program }) {
 
   authCommand
     .command("register")
-    .description("register an application for the bot")
+    .description("register an application for the client")
     .action(runRegister);
 
   authCommand
     .command("link")
-    .description("get a link to authorize bot")
+    .description("get a link to authorize client")
     .action(runLink);
 
   authCommand
@@ -29,7 +29,6 @@ export function init({ program }) {
 }
 
 async function runRegister() {
-  const { BOT_NAME, BOT_WEBSITE } = config;
   const { log } = logger;
   const client = Client();
 
@@ -37,8 +36,8 @@ async function runRegister() {
     method: "POST",
     url: "/api/v1/apps",
     data: {
-      client_name: BOT_NAME,
-      website: BOT_WEBSITE,
+      client_name: config.get("botName"),
+      website: config.get("botWebsite"),
       redirect_uris: REDIRECT_URI_OOB,
       scopes: OAUTH_SCOPES,
     },
@@ -49,22 +48,26 @@ async function runRegister() {
     log.error({ msg: "Failed to register application", data });
   }
 
-  const { client_id, client_secret, vapid_key } = response.data;
+  const {
+    client_id: clientId,
+    client_secret: clientSecret,
+    vapid_key: vapidKey,
+  } = response.data;
 
-  console.log("Application registered:");
-  console.log("");
-  console.log(`CLIENT_ID=${client_id}`);
-  console.log(`CLIENT_SECRET=${client_secret}`);
-  console.log(`VAPID_KEY=${vapid_key}`);
+  await updateDataConfig({
+    clientId,
+    clientSecret,
+    vapidKey,
+  });
+
+  log.info({ msg: "Registered client, updated config" });
 }
 
 async function runLink() {
   const { log } = logger;
-  const { API_BASE_URL, CLIENT_ID } = config;
-
-  const authUrl = new URL(`${API_BASE_URL}/oauth/authorize`);
+  const authUrl = new URL(`${config.get("apiBaseUrl")}/oauth/authorize`);
   const params = {
-    client_id: CLIENT_ID,
+    client_id: config.get("clientId"),
     scope: OAUTH_SCOPES,
     redirect_uri: REDIRECT_URI_OOB,
     response_type: "code",
@@ -72,12 +75,10 @@ async function runLink() {
   for (const [name, value] of Object.entries(params)) {
     authUrl.searchParams.set(name, value);
   }
-
   log.info({ msg: "Authorization link", authUrl });
 }
 
 async function runCode(code) {
-  const { CLIENT_ID, CLIENT_SECRET } = config;
   const { log } = logger;
   const client = Client();
 
@@ -86,8 +87,8 @@ async function runCode(code) {
       method: "POST",
       url: "/oauth/token",
       data: {
-        client_id: CLIENT_ID,
-        client_secret: CLIENT_SECRET,
+        client_id: config.get("clientId"),
+        client_secret: config.get("clientSecret"),
         scopes: OAUTH_SCOPES,
         redirect_uri: REDIRECT_URI_OOB,
         grant_type: "authorization_code",
@@ -100,11 +101,10 @@ async function runCode(code) {
       log.error({ msg: "Failed to register application", data });
     }
 
-    const { access_token } = data;
-    log.debug({ msg: "success", data });
-    console.log("Success, add this to .env:");
-    console.log("");
-    console.log(`ACCESS_TOKEN=${access_token}`);
+    const { access_token: accessToken } = data;    
+    await updateDataConfig({ accessToken });
+
+    log.info({ msg: "Obtained access token, updated config" });
   } catch (err) {
     log.error({ msg: "Token request failed", err: err.message });
   }
