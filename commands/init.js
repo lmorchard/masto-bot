@@ -7,10 +7,14 @@ import { setupDataPath } from "../lib/data.js";
 export function init({ program }) {
   program
     .command("init")
-    .description("initialize resources for the bot (run me first!)")
+    .description("initialize config and data")
+    .option(
+      "-k, --clean",
+      "delete any existing data",
+    )
     .action(run);
 }
 
-async function run() {
-  await setupDataPath();
+async function run(options) {
+  await setupDataPath(options);
 }
