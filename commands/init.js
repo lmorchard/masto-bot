@@ -12,6 +12,7 @@ export function init({ program }) {
       "-k, --clean",
       "delete any existing data",
     )
+    // TODO: options for initial bot name & website?
     .action(run);
 }
 
