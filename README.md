@@ -13,3 +13,5 @@
   - onFollow
   - onUnfollow
   - what other methods? https://docs.joinmastodon.org/methods/
+
+- rework config so the schema can be tweaked in modules

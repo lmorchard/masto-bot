@@ -1,5 +1,6 @@
 import { URL } from "url";
-import config, { updateDataConfig } from "../lib/config.js";
+import config from "../lib/config.js";
+import { updateConfig } from "../lib/data.js";
 import logger from "../lib/logger.js";
 import { Client, AuthedClient } from "../lib/client.js";
 import { OAUTH_SCOPES, REDIRECT_URI_OOB } from "../lib/constants.js";
@@ -54,7 +55,7 @@ async function runRegister() {
     vapid_key: vapidKey,
   } = response.data;
 
-  await updateDataConfig({
+  await updateConfig({
     clientId,
     clientSecret,
     vapidKey,
@@ -102,7 +103,7 @@ async function runCode(code) {
     }
 
     const { access_token: accessToken } = data;    
-    await updateDataConfig({ accessToken });
+    await updateConfig({ accessToken });
 
     log.info({ msg: "Obtained access token, updated config" });
   } catch (err) {
