@@ -1,8 +1,8 @@
 import URL from "url";
 import WebSocket from "ws";
 import config from "../lib/config.js";
-import { updateConfig } from "../lib/data.js";
 import logger from "../lib/logger.js";
+import Bot from "../lib/bot.js";
 
 export function init({ program }) {
   const authCommand = program
@@ -12,7 +12,11 @@ export function init({ program }) {
 }
 
 async function run() {
-  const { log } = logger;
+  const log = logger();
+
+  const bot = await Bot();
+  await bot.init();
+
   const baseURL = config.get("apiBaseUrl");
 
   const params = new URL.URLSearchParams({
@@ -20,7 +24,7 @@ async function run() {
   });
   const wsBaseURL = baseURL.replace("http", "ws");
   const wsUrl = `${wsBaseURL}/api/v1/streaming?${params.toString()}`;
-  log.debug({ msg: "Connecting to websocket", wsUrl });
+  log.info({ msg: "Connecting to websocket", wsUrl });
 
   const ws = new WebSocket(wsUrl);
 
@@ -32,16 +36,32 @@ async function run() {
         stream: "user:notification",
       })
     );
+    log.info({ msg: "Subscribed to notifications" });
   });
 
   ws.on("message", function message(dataBuf) {
     try {
-
       const json = dataBuf.toString();
       const { stream, event, payload: payloadJSON } = JSON.parse(json);
       const payload = JSON.parse(payloadJSON);
-
       log.trace({ msg: "received", stream, event, payload });
+
+      const { type, created_at, account, status } = payload;
+      const commonParams = { created_at, account, status, payload };
+
+      switch (type) {
+        case "mention":
+          return bot.onMentioned(commonParams);
+        case "favourite":
+          return bot.onFavorited(commonParams);
+        case "reblog":
+          return bot.onBoosted(commonParams);
+        case "follow":
+          return bot.onFollowed(commonParams);
+        default:
+          log.debug({ msg: "unhandled type", stream, event, payload });
+          return;
+      }
     } catch (err) {
       log.error({ msg: "received", err });
     }

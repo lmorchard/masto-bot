@@ -1,7 +1,7 @@
 import { URL } from "url";
 import config from "../lib/config.js";
 import { updateConfig } from "../lib/data.js";
-import logger from "../lib/logger.js";
+import Logger from "../lib/logger.js";
 import { Client, AuthedClient } from "../lib/client.js";
 import { OAUTH_SCOPES, REDIRECT_URI_OOB } from "../lib/constants.js";
 
@@ -30,7 +30,7 @@ export function init({ program }) {
 }
 
 async function runRegister() {
-  const { log } = logger;
+  const log = Logger();
   const client = Client();
 
   const response = await client({
@@ -65,7 +65,7 @@ async function runRegister() {
 }
 
 async function runLink() {
-  const { log } = logger;
+  const log = Logger();
   const authUrl = new URL(`${config.get("apiBaseUrl")}/oauth/authorize`);
   const params = {
     client_id: config.get("clientId"),
@@ -80,7 +80,7 @@ async function runLink() {
 }
 
 async function runCode(code) {
-  const { log } = logger;
+  const log = Logger();
   const client = Client();
 
   try {
@@ -112,7 +112,7 @@ async function runCode(code) {
 }
 
 async function runVerify() {
-  const { log } = logger;
+  const log = Logger();
   const client = AuthedClient();
 
   const response = await client({
@@ -126,5 +126,5 @@ async function runVerify() {
   }
   const { username, display_name } = data;
   log.info({ msg: "Verified", username, display_name });
-  log.debug({ msg: "success", data });
+  log.trace({ msg: "success", data });
 }

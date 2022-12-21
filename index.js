@@ -2,7 +2,7 @@
 import { Command } from "commander";
 
 const MODULES = [
-  ["lib", ["config", "logger", "data"]],
+  ["lib", ["config", "logger", "data", "bot"]],
   ["commands", ["init", "auth", "streaming", "notifications"]],
 ];
 
