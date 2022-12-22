@@ -5,7 +5,7 @@ import { BaseBot } from "../../lib/bot.js";
 export default class ComplimentronBot extends BaseBot {
   async init() {
     await super.init();
-    
+
     this.log = logger({ module: "complimentron" });
 
     const contentFile = new URL("./shakespeare.txt", import.meta.url);
@@ -34,57 +34,59 @@ export default class ComplimentronBot extends BaseBot {
   async onMentioned({ created_at, account, status }) {
     const { log } = this;
     const { acct } = account;
-    const { id, content, visibility } = status;
+    const { id, visibility } = status;
 
-    log.info({ msg: "mentioned", created_at, acct, content });
+    log.info({ msg: "mentioned", created_at, acct });
 
     const resp = this.api.postStatus({
       status: `@${acct} ${this.generate()}`,
       visibility,
       in_reply_to_id: id,
     });
-
-    log.debug({ msg: "postedReply", resp });
+    log.trace({ msg: "postedReply", resp });
   }
 
   async onFavorited({ created_at, account, status }) {
     const { log } = this;
     const { acct } = account;
-    const { content } = status;
+    const { id, visibility } = status;
 
-    log.info({ msg: "favorited", created_at, acct, content });
+    log.info({ msg: "favorited", created_at, acct });
+
+    const resp = this.api.postStatus({
+      status: `@${acct} Oh you liked that, did you? ${this.generate()}`,
+      visibility,
+      in_reply_to_id: id,
+    });
+    log.trace({ msg: "postedReply", resp });
   }
 
   async onBoosted({ created_at, account, status }) {
     const { log } = this;
     const { acct } = account;
-    const { content } = status;
+    const { id, visibility } = status;
 
-    log.info({ msg: "boosted", created_at, acct, content });
+    log.info({ msg: "boosted", created_at, acct });
+
+    const resp = this.api.postStatus({
+      status: `@${acct} Thank you for the boost, ${this.generate()}`,
+      visibility,
+      in_reply_to_id: id,
+    });
+    log.trace({ msg: "postedReply", resp });
   }
 
   async onFollowed({ created_at, account }) {
     const { log } = this;
-    const { acct } = account;
+    const { id, visibility } = status;
 
     log.info({ msg: "followed by", created_at, acct });
+
+    const resp = this.api.postStatus({
+      status: `@${acct} Thanks for the follow, ${this.generate()}`,
+      visibility,
+      in_reply_to_id: id,
+    });
+    log.trace({ msg: "postedReply", resp });
   }
 }
-
-/*
-exports.onCreateNote = async ({ send }) => {
-  return send(await compliments.generate());
-};
-
-exports.onLike = async ({ send }) => {
-  return send(`Oh you liked that, did you? ${await compliments.generate()}`);
-};
-
-exports.onBoost = async ({ send }) => {
-  return send(`Thank you for the boost, ${await compliments.generate()}`);
-};
-
-exports.onFollow = async ({ send }) => {
-  return send(`Thanks for the follow, ${await compliments.generate()}`);
-};
-*/
