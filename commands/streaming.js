@@ -13,9 +13,7 @@ export function init({ program }) {
 
 async function run() {
   const log = logger();
-
   const bot = await Bot();
-  await bot.init();
 
   const baseURL = config.get("apiBaseUrl");
 
@@ -28,7 +26,7 @@ async function run() {
 
   const ws = new WebSocket(wsUrl);
 
-  ws.on("open", function open() {
+  ws.on("open", async function open() {
     log.trace({ msg: "open" });
     ws.send(
       JSON.stringify({
@@ -39,29 +37,14 @@ async function run() {
     log.info({ msg: "Subscribed to notifications" });
   });
 
-  ws.on("message", function message(dataBuf) {
+  ws.on("message", async function message(dataBuf) {
     try {
       const json = dataBuf.toString();
       const { stream, event, payload: payloadJSON } = JSON.parse(json);
       const payload = JSON.parse(payloadJSON);
       log.trace({ msg: "received", stream, event, payload });
 
-      const { type, created_at, account, status } = payload;
-      const commonParams = { created_at, account, status, payload };
-
-      switch (type) {
-        case "mention":
-          return bot.onMentioned(commonParams);
-        case "favourite":
-          return bot.onFavorited(commonParams);
-        case "reblog":
-          return bot.onBoosted(commonParams);
-        case "follow":
-          return bot.onFollowed(commonParams);
-        default:
-          log.debug({ msg: "unhandled type", stream, event, payload });
-          return;
-      }
+      await bot.dispatchNotification(payload);
     } catch (err) {
       log.error({ msg: "received", err });
     }
