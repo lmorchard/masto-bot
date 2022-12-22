@@ -16,7 +16,7 @@ export function init({ program }) {
 
 const DATA_NAME = "notifications";
 
-async function runPoll() {
+async function runPoll(options) {
   const log = Logger({ module: "commands/notifications" });
   const client = AuthedClient();
   const bot = await Bot();

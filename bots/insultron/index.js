@@ -2,11 +2,11 @@ import logger from "../../lib/logger.js";
 import { loadTextLines, pick } from "../../lib/utils.js";
 import { BaseBot } from "../../lib/bot.js";
 
-export default class ComplimentronBot extends BaseBot {
+export default class InsultronBot extends BaseBot {
   async init() {
     await super.init();
 
-    this.log = logger({ module: "complimentron" });
+    this.log = logger({ module: "insultron" });
 
     const contentFile = new URL("./shakespeare.txt", import.meta.url);
     this.log.trace({ msg: "load content", contentFile });
