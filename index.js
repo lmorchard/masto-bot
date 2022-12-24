@@ -30,13 +30,13 @@ class MastotronBase {
 
   async preAction(thisCommand) {}
 
-  async parseAsync(argv) {
+  async parseCommand(argv) {
     return this.program.parseAsync(argv);
   }
 
   async run() {
     await this.init();
-    await this.parseAsync(process.argv);
+    await this.parseCommand(process.argv);
   }
 }
 
