@@ -2,11 +2,11 @@ import fs from "fs/promises";
 
 import { Command } from "commander";
 
-import ConfigMixin from "./lib/config.js";
-import LoggerMixin from "./lib/logger.js";
-import DataMixin from "./lib/data.js";
-import ClientMixin from "./lib/client.js";
-import BotMixin from "./lib/bot.js";
+import ConfigMixin from "./mixins/config.js";
+import LoggerMixin from "./mixins/logger.js";
+import DataMixin from "./mixins/data.js";
+import ClientMixin from "./mixins/client.js";
+import BotMixin from "./mixins/bot.js";
 
 import CommandInitMixin from "./commands/init.js";
 import CommandAuthMixin from "./commands/auth.js";
