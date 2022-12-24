@@ -24,10 +24,10 @@ export default (Base) =>
         access_token: config.get("accessToken"),
       });
       const wsBaseURL = baseURL.replace("http", "ws");
-      const wsUrl = `${wsBaseURL}/api/v1/streaming?${params.toString()}`;
-      log.info({ msg: "Connecting to websocket", wsUrl });
+      const wsURL = `${wsBaseURL}/api/v1/streaming`;
+      log.info({ msg: "Connecting to websocket", wsURL });
 
-      this.ws = new WebSocket(wsUrl);
+      this.ws = new WebSocket(`${wsURL}?${params.toString()}`);
       this.ws.on("open", this.handleStreamingOpen.bind(this));
       this.ws.on("message", this.handleStreamingMessage.bind(this));
     }
