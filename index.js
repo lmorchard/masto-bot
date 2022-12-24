@@ -1,20 +1,55 @@
-#!/usr/bin/env node
+import fs from "fs/promises";
+
 import { Command } from "commander";
 
-const MODULES = [
-  ["lib", ["config", "logger", "data", "bot"]],
-  ["commands", ["init", "auth", "streaming", "notifications"]],
-];
+import ConfigMixin from "./lib/config.js";
+import LoggerMixin from "./lib/logger.js";
+import DataMixin from "./lib/data.js";
+import ClientMixin from "./lib/client.js";
+import BotMixin from "./lib/bot.js";
 
-async function main() {
-  const program = new Command();
-  const context = { program };
-  for (const [moduleDir, moduleNames] of MODULES) {
-    for (const moduleName of moduleNames) {
-      (await import(`./${moduleDir}/${moduleName}.js`)).init(context);
-    }
+import CommandInitMixin from "./commands/init.js";
+import CommandAuthMixin from "./commands/auth.js";
+import CommandNotificationsMixin from "./commands/notifications.js";
+import CommandStreamingMixin from "./commands/streaming.js";
+
+class MastotronBase {
+  constructor(options) {
+    this.options = options;
+    this.program = new Command();
   }
-  await program.parseAsync(process.argv);
+
+  async init() {
+    const packageJson = JSON.parse(
+      await fs.readFile(new URL("./package.json", import.meta.url))
+    );
+    this.program
+      .version(packageJson.version)
+      .hook("preAction", (...args) => this.preAction(...args));
+  }
+
+  async preAction(thisCommand) {}
+
+  async parseAsync(argv) {
+    return this.program.parseAsync(argv);
+  }
+
+  async run() {
+    await this.init();
+    await this.parseAsync(process.argv);
+  }
 }
 
-main().catch((err) => console.error(err));
+export const Mastotron = [
+  ConfigMixin,
+  LoggerMixin,
+  DataMixin,
+  ClientMixin,
+  BotMixin,
+  CommandInitMixin,
+  CommandAuthMixin,
+  CommandNotificationsMixin,
+  CommandStreamingMixin,
+].reduce((base, mixin) => mixin(base), MastotronBase);
+
+export default Mastotron;
