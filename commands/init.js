@@ -13,11 +13,6 @@ export default (Base) =>
         .option("-n, --name [name]", "client application name")
         .option("-w, --website [URL]", "client website URL")
         .option(
-          "-b, --bot-path [path]",
-          "path to the bot module file",
-          "./bots/complimentron"
-        )
-        .option(
           "-u, --base-url [URL]",
           "server base URL",
           "https://mastodon.social"

@@ -23,7 +23,7 @@ class Complimentron extends Mastotron {
   async preAction(command) {
     await super.preAction(command);
 
-    const log = this.logComplimentron();
+    const log = this.logBot();
 
     const contentFile = new URL("./shakespeare.txt", import.meta.url);
 
@@ -41,7 +41,7 @@ class Complimentron extends Mastotron {
     log.trace({ msg: "loaded content" });
   }
 
-  logComplimentron() {
+  logBot() {
     return this.log({ module: "complimentron" });
   }
 
@@ -55,7 +55,7 @@ class Complimentron extends Mastotron {
   }
 
   async onMentioned({ created_at, account, status }) {
-    const log = this.logComplimentron();
+    const log = this.logBot();
     const { acct } = account;
     const { id, visibility } = status;
 
@@ -70,7 +70,7 @@ class Complimentron extends Mastotron {
   }
 
   async onFavorited({ created_at, account, status }) {
-    const log = this.logComplimentron();
+    const log = this.logBot();
     const { acct } = account;
     const { id, visibility } = status;
 
@@ -85,7 +85,7 @@ class Complimentron extends Mastotron {
   }
 
   async onBoosted({ created_at, account, status }) {
-    const log = this.logComplimentron();
+    const log = this.logBot();
     const { acct } = account;
     const { id, visibility } = status;
 
@@ -100,9 +100,8 @@ class Complimentron extends Mastotron {
   }
 
   async onFollowed({ created_at, account }) {
-    const log = this.logComplimentron();
+    const log = this.logBot();
     const { acct } = account;
-
     log.info({ msg: "followed by", created_at, acct });
 
     const resp = this.postStatus({

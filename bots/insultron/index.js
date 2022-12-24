@@ -23,7 +23,7 @@ class Insultron extends Mastotron {
   async preAction(command) {
     await super.preAction(command);
 
-    const log = this.logInsultron();
+    const log = this.logBot();
 
     const contentFile = new URL("./shakespeare.txt", import.meta.url);
 
@@ -41,7 +41,7 @@ class Insultron extends Mastotron {
     log.trace({ msg: "loaded content" });
   }
 
-  logInsultron() {
+  logBot() {
     return this.log({ module: "insultron" });
   }
 
@@ -53,9 +53,8 @@ class Insultron extends Mastotron {
       pick(this.content[2]),
     ].join(" ");
   }
-
   async onMentioned({ created_at, account, status }) {
-    const log = this.logInsultron();
+    const log = this.logBot();
     const { acct } = account;
     const { id, visibility } = status;
 
@@ -70,7 +69,7 @@ class Insultron extends Mastotron {
   }
 
   async onFavorited({ created_at, account, status }) {
-    const log = this.logInsultron();
+    const log = this.logBot();
     const { acct } = account;
     const { id, visibility } = status;
 
@@ -85,7 +84,7 @@ class Insultron extends Mastotron {
   }
 
   async onBoosted({ created_at, account, status }) {
-    const log = this.logInsultron();
+    const log = this.logBot();
     const { acct } = account;
     const { id, visibility } = status;
 
@@ -100,9 +99,8 @@ class Insultron extends Mastotron {
   }
 
   async onFollowed({ created_at, account }) {
-    const log = this.logInsultron();
+    const log = this.logBot();
     const { acct } = account;
-
     log.info({ msg: "followed by", created_at, acct });
 
     const resp = this.postStatus({
