@@ -1,5 +1,7 @@
 import { URL } from "url";
-import { OAUTH_SCOPES, REDIRECT_URI_OOB } from "../lib/constants.js";
+
+export const OAUTH_SCOPES = "read read:notifications read:statuses write follow push";
+export const REDIRECT_URI_OOB = "urn:ietf:wg:oauth:2.0:oob";
 
 export default (Base) =>
   class extends Base {
