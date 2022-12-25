@@ -42,6 +42,7 @@ export default (Base) =>
         })
       );
       log.info({ msg: "Subscribed to notifications" });
+      this.onStart();
     }
 
     async handleStreamingMessage(dataBuf) {

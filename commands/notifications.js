@@ -49,5 +49,7 @@ export default (Base) =>
       this.updateJSON(DATA_NAME, {
         since_id: data[data.length - 1].id,
       });
+
+      this.onInterval();
     }    
   };

@@ -21,8 +21,23 @@ export default (Base) =>
           format: Boolean,
           default: true,
         },
+        timerInterval: {
+          doc: "Period of time between onInterval events",
+          env: "TIMER_INTERVAL",
+          format: Number,
+          default: 5000,
+        }
       };
     }
+
+    async onStart() {
+      this.intervalTimer = setInterval(
+        this.onInterval.bind(this),
+        this.config.get("timerInterval"),
+      );
+    }
+
+    async onInterval() {}
 
     static NOTIFICATION_TYPES_TO_METHODS = {
       mention: "onMentioned",
