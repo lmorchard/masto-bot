@@ -31,6 +31,8 @@ export default (Base) =>
     }
 
     async onStart() {
+      const log = this.log();
+      log.trace({ msg: "onStart" });
       this.intervalTimer = setInterval(
         this.onInterval.bind(this),
         this.config.get("timerInterval"),
@@ -39,6 +41,15 @@ export default (Base) =>
 
     async onInterval() {}
 
+    async scheduleCallback(propName, dataName, scheduledInterval, callback) {
+      const now = Date.now();
+      const { [propName]: lastCallTime = 0 } = await this.loadJSON(dataName);
+      if (now - lastCallTime > scheduledInterval) {
+        await this.updateJSON(dataName, { [propName]: now });
+        return callback();
+      }
+    }
+  
     static NOTIFICATION_TYPES_TO_METHODS = {
       mention: "onMentioned",
       favourite: "onFavorited",

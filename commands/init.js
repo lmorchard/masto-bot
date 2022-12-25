@@ -1,6 +1,6 @@
 import path from "path";
 import mkdirp from "mkdirp";
-//import { setupDataPath } from "../lib/data.js";
+import rmfr from "rmfr";
 
 export default (Base) =>
   class extends Base {
