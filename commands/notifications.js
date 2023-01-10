@@ -1,7 +1,8 @@
 const DATA_NAME = "notifications";
 
-export default (Base) =>
-  class extends Base {
+/** @param {ReturnType<import("./auth.js").default>} Base */
+export default function CommandNotificationsMixin(Base) {
+  return class CommandNotificationsMixinBase extends Base {
     constructor(options) {
       super(options);
       const { program } = this;
@@ -53,3 +54,4 @@ export default (Base) =>
       this.onInterval();
     }    
   };
+}

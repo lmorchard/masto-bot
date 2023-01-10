@@ -1,8 +1,9 @@
 import URL from "url";
 import WebSocket from "ws";
 
-export default (Base) =>
-  class extends Base {
+/** @param {ReturnType<import("./notifications.js").default>} Base */
+export default function CommandStreamingMixin(Base) {
+  return class CommandStreamingMixinBase extends Base {
     constructor(options) {
       super(options);
       this.program
@@ -59,3 +60,4 @@ export default (Base) =>
       }
     }
   };
+}

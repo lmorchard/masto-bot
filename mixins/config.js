@@ -1,8 +1,9 @@
 import * as dotenv from "dotenv";
 import Convict from "convict";
 
-export default (Base) =>
-  class extends Base {
+/** @param {import("../index.js").MastotronBase} Base */
+export default function ConfigMixin(Base) {
+  return class ConfigMixinBase extends Base {
     constructor(options) {
       super(options);
       const { program } = this;
@@ -76,3 +77,4 @@ export default (Base) =>
       log.info({ msg: "set config value", configName, configValue });
     }
   };
+}

@@ -8,12 +8,9 @@ import DataMixin from "./mixins/data.js";
 import ClientMixin from "./mixins/client.js";
 import BotMixin from "./mixins/bot.js";
 
-import CommandInitMixin from "./commands/init.js";
-import CommandAuthMixin from "./commands/auth.js";
-import CommandNotificationsMixin from "./commands/notifications.js";
-import CommandStreamingMixin from "./commands/streaming.js";
+import CommandsMixin from "./commands/index.js";
 
-class MastotronBase {
+export class MastotronBase {
   constructor(options) {
     this.options = options;
     this.program = new Command();
@@ -40,6 +37,7 @@ class MastotronBase {
   }
 }
 
+/*
 export const Mastotron = [
   ConfigMixin,
   LoggerMixin,
@@ -51,5 +49,12 @@ export const Mastotron = [
   CommandNotificationsMixin,
   CommandStreamingMixin,
 ].reduce((base, mixin) => mixin(base), MastotronBase);
+*/
+
+
+
+export const Mastotron = CommandsMixin(
+  BotMixin(ClientMixin(DataMixin(LoggerMixin(ConfigMixin(MastotronBase)))))
+);
 
 export default Mastotron;

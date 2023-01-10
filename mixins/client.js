@@ -1,7 +1,8 @@
 import axios from "axios";
 
-export default (Base) =>
-  class extends Base {
+/** @param {ReturnType<import("./data.js").default>} Base */
+export default function ClientMixin(Base) {
+  return class ClientMixinBase extends Base {
     async preAction(command) {
       await super.preAction(command);
 
@@ -87,7 +88,7 @@ export default (Base) =>
         visibility,
         sensitive,
       };
-      log.trace({ msg: "postStatus", ...data });
+      log.debug({ msg: "postStatus", ...data });
       return this.authedClient({
         method: "POST",
         url: "/api/v1/statuses",
@@ -95,3 +96,4 @@ export default (Base) =>
       });
     }
   };
+}

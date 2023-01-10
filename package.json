@@ -21,5 +21,8 @@
     "pino-pretty": "^9.1.1",
     "rmfr": "^2.0.0",
     "ws": "^8.11.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.18"
   }
 }

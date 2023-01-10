@@ -2,8 +2,9 @@ import path from "path";
 import mkdirp from "mkdirp";
 import rmfr from "rmfr";
 
-export default (Base) =>
-  class extends Base {
+/** @param {ReturnType<import("../mixins/bot.js").default>} Base */
+export default function CommandsInitMixin(Base) {
+  return class CommandsInitMixinBase extends Base {
     constructor(options) {
       super(options);
       this.program
@@ -47,3 +48,4 @@ export default (Base) =>
       log.info({ msg: "Initialized data", dataPath });
     }
   };
+}

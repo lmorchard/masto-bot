@@ -2,8 +2,9 @@ import path from "path";
 import fs from "fs";
 import fsPromises from "fs/promises";
 
-export default (Base) =>
-  class extends Base {
+/** @param {ReturnType<import("./logger.js").default>} Base */
+export default function DataMixin(Base) {
+  return class DataMixinBase extends Base {
     constructor(options) {
       super(options);
       this.program.option(
@@ -90,3 +91,4 @@ export default (Base) =>
       return this.updateJSON("config", updates);
     }
   };
+}

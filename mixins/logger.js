@@ -1,7 +1,8 @@
 import pino from "pino";
 
-export default (Base) =>
-  class extends Base {
+/** @param {ReturnType<import("./config.js").default>} Base */
+export default function LoggerMixin(Base) {
+  return class LoggerMixinBase extends Base {
     constructor(options) {
       super(options);
       this.program.option(
@@ -46,3 +47,4 @@ export default (Base) =>
       return this.rootlog.child(bindings, options);
     }
   };
+}

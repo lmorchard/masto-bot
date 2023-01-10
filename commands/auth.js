@@ -1,10 +1,12 @@
 import { URL } from "url";
 
-export const OAUTH_SCOPES = "read read:notifications read:statuses write follow push";
+export const OAUTH_SCOPES =
+  "read read:notifications read:statuses write follow push";
 export const REDIRECT_URI_OOB = "urn:ietf:wg:oauth:2.0:oob";
 
-export default (Base) =>
-  class extends Base {
+/** @param {ReturnType<import("./init.js").default>} Base */
+export default function CommandAuthMixin(Base) {
+  return class CommandAuthMixinBase extends Base {
     constructor(options) {
       super(options);
       const { program } = this;
@@ -37,7 +39,7 @@ export default (Base) =>
     async runAuthRegister() {
       const { config, client } = this;
       const log = this.log();
-    
+
       const response = await client({
         method: "POST",
         url: "/api/v1/apps",
@@ -48,27 +50,27 @@ export default (Base) =>
           scopes: OAUTH_SCOPES,
         },
       });
-    
+
       const { status, data } = response;
       if (status !== 200) {
         log.error({ msg: "Failed to register application", data });
       }
-    
+
       const {
         client_id: clientId,
         client_secret: clientSecret,
         vapid_key: vapidKey,
       } = response.data;
-    
+
       await this.updateConfig({
         clientId,
         clientSecret,
         vapidKey,
       });
-    
+
       log.info({ msg: "Registered client, updated config" });
     }
-    
+
     async runAuthLink() {
       const { config } = this;
       const log = this.log();
@@ -85,11 +87,11 @@ export default (Base) =>
       }
       log.info({ msg: "Authorization link", authUrl });
     }
-    
+
     async runAuthCode(code) {
       const { config, client } = this;
       const log = this.log();
-    
+
       try {
         const response = await client({
           method: "POST",
@@ -103,30 +105,30 @@ export default (Base) =>
             code,
           },
         });
-    
+
         const { status, data } = response;
         if (status !== 200) {
           log.error({ msg: "Failed to register application", data });
         }
-    
+
         const { access_token: accessToken } = data;
         await this.updateConfig({ accessToken });
-    
+
         log.info({ msg: "Obtained access token, updated config" });
       } catch (err) {
         log.error({ msg: "Token request failed", err: err.message });
       }
     }
-    
+
     async runAuthVerify() {
       const { config, authedClient: client } = this;
       const log = this.log();
-    
+
       const response = await client({
         method: "GET",
         url: "/api/v1/accounts/verify_credentials",
       });
-    
+
       const { status, data } = response;
       if (status !== 200) {
         log.error({ msg: "Failed to register application", data });
@@ -134,5 +136,6 @@ export default (Base) =>
       const { username, display_name } = data;
       log.info({ msg: "Verified", username, display_name });
       log.trace({ msg: "success", data });
-    }    
+    }
   };
+}

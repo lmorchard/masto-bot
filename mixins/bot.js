@@ -1,5 +1,6 @@
-export default (Base) =>
-  class extends Base {
+/** @param {ReturnType<import("./client.js").default>} Base */
+export default function BotMixin(Base) {
+  return class BotMixinBase extends Base {
     configSchema() {
       return {
         ...super.configSchema(),
@@ -26,7 +27,7 @@ export default (Base) =>
           env: "TIMER_INTERVAL",
           format: Number,
           default: 5000,
-        }
+        },
       };
     }
 
@@ -35,21 +36,33 @@ export default (Base) =>
       log.trace({ msg: "onStart" });
       this.intervalTimer = setInterval(
         this.onInterval.bind(this),
-        this.config.get("timerInterval"),
+        this.config.get("timerInterval")
       );
     }
 
     async onInterval() {}
 
     async scheduleCallback(propName, dataName, scheduledInterval, callback) {
+      const log = this.log();
       const now = Date.now();
       const { [propName]: lastCallTime = 0 } = await this.loadJSON(dataName);
-      if (now - lastCallTime > scheduledInterval) {
+      const durationSince = now - lastCallTime;
+      const shouldCall = durationSince > scheduledInterval;
+      log.trace({
+        msg: "scheduleCallback",
+        propName,
+        dataName,
+        lastCallTime,
+        durationSince,
+        scheduledInterval,
+        shouldCall,
+      });
+      if (shouldCall) {
         await this.updateJSON(dataName, { [propName]: now });
         return callback();
       }
     }
-  
+
     static NOTIFICATION_TYPES_TO_METHODS = {
       mention: "onMentioned",
       favourite: "onFavorited",
@@ -65,7 +78,7 @@ export default (Base) =>
 
       const { account, type } = payload;
       const { acct, bot } = account;
-      if (bot) {
+      if (bot && this.config.get("ignoreBots")) {
         log.debug({ msg: "ignoring message from bot account", acct });
         return;
       }
@@ -112,3 +125,4 @@ export default (Base) =>
       log.debug({ msg: "unhandled type", type, payload });
     }
   };
+}
