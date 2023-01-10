@@ -168,5 +168,5 @@ declare const Mastotron_base: {
 };
 export class Mastotron extends Mastotron_base {
 }
+export default Mastotron;
 import { Command } from "commander";
-export {};

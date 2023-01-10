@@ -41,3 +41,5 @@ export class MastotronBase {
 export class Mastotron extends CommandsMixin(
   BotMixin(ClientMixin(DataMixin(LoggerMixin(ConfigMixin(MastotronBase)))))
 ) {}
+
+export default Mastotron;
