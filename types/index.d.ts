@@ -7,7 +7,7 @@ export class MastotronBase {
     parseCommand(argv: any): Promise<Command>;
     run(): Promise<void>;
 }
-export const Mastotron: {
+declare const Mastotron_base: {
     new (options: any): {
         logStreaming(): import("pino").default.Logger<any>;
         runStreaming(): Promise<void>;
@@ -166,5 +166,7 @@ export const Mastotron: {
         follow: string;
     };
 };
-export default Mastotron;
+export class Mastotron extends Mastotron_base {
+}
 import { Command } from "commander";
+export {};

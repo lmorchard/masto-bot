@@ -37,8 +37,7 @@ export class MastotronBase {
   }
 }
 
-export const Mastotron = CommandsMixin(
+// TODO: This is so ugly. Probably need more ugly type inference shenanigans for cleaner code
+export class Mastotron extends CommandsMixin(
   BotMixin(ClientMixin(DataMixin(LoggerMixin(ConfigMixin(MastotronBase)))))
-);
-
-export default Mastotron;
+) {}
