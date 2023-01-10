@@ -1,5 +1,5 @@
-/** @param {ReturnType<import("../mixins/bot.js").default>} Base */
-export default function CommandsInitMixin(Base: ReturnType<typeof import("../mixins/bot.js").default>): {
+/** @param {import("./index.js").Base} Base */
+export default function CommandsInitMixin(Base: import("./index.js").Base): {
     new (options: any): {
         runInit({ clean, name, website, botPath, baseUrl }: {
             clean?: boolean;
