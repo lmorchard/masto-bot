@@ -2,7 +2,7 @@ import path from "path";
 import mkdirp from "mkdirp";
 import rmfr from "rmfr";
 
-/** @param {ReturnType<import("../mixins/bot.js").default>} Base */
+/** @param {import("./index.js").Base} Base */
 export default function CommandsInitMixin(Base) {
   return class CommandsInitMixinBase extends Base {
     constructor(options) {

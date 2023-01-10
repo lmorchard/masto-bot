@@ -37,22 +37,6 @@ export class MastotronBase {
   }
 }
 
-/*
-export const Mastotron = [
-  ConfigMixin,
-  LoggerMixin,
-  DataMixin,
-  ClientMixin,
-  BotMixin,
-  CommandInitMixin,
-  CommandAuthMixin,
-  CommandNotificationsMixin,
-  CommandStreamingMixin,
-].reduce((base, mixin) => mixin(base), MastotronBase);
-*/
-
-
-
 export const Mastotron = CommandsMixin(
   BotMixin(ClientMixin(DataMixin(LoggerMixin(ConfigMixin(MastotronBase)))))
 );
