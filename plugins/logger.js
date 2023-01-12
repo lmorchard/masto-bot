@@ -1,7 +1,7 @@
 import pino from "pino";
 import BasePlugin from "./base.js";
 
-export default class Logger extends BasePlugin {
+export default class LoggerPlugin extends BasePlugin {
   static configSchema = {
     logLevel: {
       doc: "Logging level",

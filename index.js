@@ -3,12 +3,12 @@ import fs from "fs/promises";
 import { Command } from "commander";
 
 import Events from "./plugins/events.js";
-import Config from "./plugins/config.js";
-import Logger from "./plugins/logger.js";
-import Data from "./plugins/data.js";
-import Client from "./plugins/client.js";
-import Bot from "./plugins/bot.js";
-import Commands from "./commands/index.js";
+import ConfigPlugin from "./plugins/config.js";
+import LoggerPlugin from "./plugins/logger.js";
+import DataPlugin from "./plugins/data.js";
+import ClientPlugin from "./plugins/client.js";
+import BotPlugin from "./plugins/bot.js";
+import CommandsIndexPlugin from "./commands/index.js";
 
 export default class Mastotron {
   static configSchema = {};
@@ -17,12 +17,12 @@ export default class Mastotron {
     this.options = options;
     this.events = new Events();
     this.program = new Command();
-    this.config = new Config(this);
-    this.logger = new Logger(this);
-    this.data = new Data(this);
-    this.client = new Client(this);
-    this.bot = new Bot(this);
-    this.commands = new Commands(this);
+    this.config = new ConfigPlugin(this);
+    this.logger = new LoggerPlugin(this);
+    this.data = new DataPlugin(this);
+    this.client = new ClientPlugin(this);
+    this.bot = new BotPlugin(this);
+    this.commands = new CommandsIndexPlugin(this);
 
     this.config.extendSchema(this.constructor.configSchema);
     this.program.hook("preAction", this.preAction.bind(this));

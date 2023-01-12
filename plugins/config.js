@@ -2,7 +2,7 @@ import * as dotenv from "dotenv";
 import Convict from "convict";
 import BasePlugin from "./base.js";
 
-export default class Config extends BasePlugin {
+export default class ConfigPlugin extends BasePlugin {
   /** @param {import("../index.js").default} parent */
   constructor(parent) {
     super(parent);

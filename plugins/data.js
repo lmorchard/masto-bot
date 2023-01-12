@@ -3,7 +3,7 @@ import fs from "fs";
 import fsPromises from "fs/promises";
 import BasePlugin from "./base.js";
 
-export default class Data extends BasePlugin {
+export default class DataPlugin extends BasePlugin {
   static configSchema = {
     dataPath: {
       doc: "Path where config and data can be found",
