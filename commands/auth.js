@@ -1,5 +1,5 @@
 import { URL } from "url";
-import BasePlugin from "../mixins/base.js";
+import BasePlugin from "../plugins/base.js";
 
 export const OAUTH_SCOPES =
   "read read:notifications read:statuses write follow push";

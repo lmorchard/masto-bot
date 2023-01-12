@@ -1,4 +1,4 @@
-import BasePlugin from "../mixins/base.js";
+import BasePlugin from "../plugins/base.js";
 import CommandInit from "./init.js";
 import CommandAuth from "./auth.js";
 import CommandNotifications from "./notifications.js";

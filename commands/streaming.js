@@ -1,6 +1,6 @@
 import URL from "url";
 import WebSocket from "ws";
-import BasePlugin from "../mixins/base.js";
+import BasePlugin from "../plugins/base.js";
 
 export default class CommandStreaming extends BasePlugin {
   /** @param {import("../index.js").default} parent */

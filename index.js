@@ -2,12 +2,12 @@ import fs from "fs/promises";
 
 import { Command } from "commander";
 
-import Events from "./mixins/events.js";
-import Config from "./mixins/config.js";
-import Logger from "./mixins/logger.js";
-import Data from "./mixins/data.js";
-import Client from "./mixins/client.js";
-import Bot from "./mixins/bot.js";
+import Events from "./plugins/events.js";
+import Config from "./plugins/config.js";
+import Logger from "./plugins/logger.js";
+import Data from "./plugins/data.js";
+import Client from "./plugins/client.js";
+import Bot from "./plugins/bot.js";
 import Commands from "./commands/index.js";
 
 export default class Mastotron {

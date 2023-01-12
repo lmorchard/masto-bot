@@ -2,7 +2,7 @@ import path from "path";
 import mkdirp from "mkdirp";
 import rmfr from "rmfr";
 
-import BasePlugin from "../mixins/base.js";
+import BasePlugin from "../plugins/base.js";
 
 export default class CommandInit extends BasePlugin {
   /** @param {import("../index.js").default} parent */
