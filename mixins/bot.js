@@ -29,9 +29,10 @@ export default class BotPlugin extends BasePlugin {
   };
 
   async scheduleCallback(propName, dataName, scheduledInterval, callback) {
-    const log = this.log();
+    const { data, logger } = this.parent;
+    const log = logger.log();
     const now = Date.now();
-    const { [propName]: lastCallTime = 0 } = await this.loadJSON(dataName);
+    const { [propName]: lastCallTime = 0 } = await data.loadJSON(dataName);
     const durationSince = now - lastCallTime;
     const shouldCall = durationSince > scheduledInterval;
     log.trace({
@@ -44,7 +45,7 @@ export default class BotPlugin extends BasePlugin {
       shouldCall,
     });
     if (shouldCall) {
-      await this.updateJSON(dataName, { [propName]: now });
+      await data.updateJSON(dataName, { [propName]: now });
       return callback();
     }
   }
