@@ -1,11 +1,5 @@
-#!/usr/bin/env node
-
 import fs from "fs/promises";
 import Mastotron from "../../index.js";
-
-async function main() {
-  return new Insultron().run();
-}
 
 export const readTextFile = async (name) =>
   fs.readFile(name, { encoding: "utf8" });
@@ -19,13 +13,24 @@ export const loadTextLines = async (name) =>
     .filter((line) => !!line)
     .filter((line) => line.substr(0, 1) !== "#");
 
-class Insultron extends Mastotron {
-  async preAction(command) {
-    await super.preAction(command);
+export default class Complimentron extends Mastotron {
+  static configSchema = {
+    wordKit: {
+      doc: "Word kit for content generation",
+      env: "WORD_KIT",
+      format: ["compliments", "insults"],
+      default: "compliments",
+    },
+  };
 
+  async preAction(command) {
+    const { config } = this;
     const log = this.logBot();
 
-    const contentFile = new URL("./shakespeare.txt", import.meta.url);
+    const contentFile = new URL(
+      `${config.get("wordKit")}.txt`,
+      import.meta.url
+    );
 
     this.content = (await loadTextLines(contentFile))
       .map((line) => line.split(/\s+/))
@@ -42,7 +47,8 @@ class Insultron extends Mastotron {
   }
 
   logBot() {
-    return this.log({ module: "insultron" });
+    const { logger } = this;
+    return logger.log({ module: "complimentron" });
   }
 
   generate() {
@@ -53,6 +59,7 @@ class Insultron extends Mastotron {
       pick(this.content[2]),
     ].join(" ");
   }
+
   async onMentioned({ created_at, account, status }) {
     const log = this.logBot();
     const { acct } = account;
@@ -60,7 +67,7 @@ class Insultron extends Mastotron {
 
     log.info({ msg: "mentioned", created_at, acct });
 
-    const resp = this.postStatus({
+    const resp = this.client.postStatus({
       status: `@${acct} ${this.generate()}`,
       visibility,
       in_reply_to_id: id,
@@ -75,7 +82,7 @@ class Insultron extends Mastotron {
 
     log.info({ msg: "favorited", created_at, acct });
 
-    const resp = this.postStatus({
+    const resp = this.client.postStatus({
       status: `@${acct} Oh you liked that, did you? ${this.generate()}`,
       visibility,
       in_reply_to_id: id,
@@ -90,7 +97,7 @@ class Insultron extends Mastotron {
 
     log.info({ msg: "boosted", created_at, acct });
 
-    const resp = this.postStatus({
+    const resp = this.client.postStatus({
       status: `@${acct} Thank you for the boost, ${this.generate()}`,
       visibility,
       in_reply_to_id: id,
@@ -103,11 +110,9 @@ class Insultron extends Mastotron {
     const { acct } = account;
     log.info({ msg: "followed by", created_at, acct });
 
-    const resp = this.postStatus({
+    const resp = this.client.postStatus({
       status: `@${acct} Thanks for the follow, ${this.generate()}`,
     });
     log.trace({ msg: "postedReply", resp });
   }
 }
-
-main().catch(console.error);
