@@ -41,6 +41,12 @@ export default class ClientPlugin extends BasePlugin {
       nullable: true,
       sensitive: true,
     },
+    userAgent: {
+      doc: "User-Agent header to use in requests",
+      env: "USER_AGENT",
+      format: String,
+      default: "Mastotron/1.0.0",
+    }
   };
 
   async preAction() {
@@ -55,7 +61,12 @@ export default class ClientPlugin extends BasePlugin {
     const log = logger.log();
     const baseURL = config.get("apiBaseUrl");
     log.trace({ msg: "Client", baseURL });
-    return axios.create({ baseURL });
+    return axios.create({
+      baseURL,
+      headers: {
+        "User-Agent": config.get("userAgent"),
+      },
+    });
   }
 
   AuthedClient(opts = {}) {
@@ -69,6 +80,7 @@ export default class ClientPlugin extends BasePlugin {
     return axios.create({
       baseURL,
       headers: {
+        "User-Agent": config.get("userAgent"),
         Authorization: `Bearer ${accessToken}`,
       },
     });

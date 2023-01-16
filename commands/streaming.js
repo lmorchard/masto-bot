@@ -25,12 +25,17 @@ export default class CommandStreaming extends BasePlugin {
 
     const params = new URL.URLSearchParams({
       access_token: config.get("accessToken"),
+      stream: "user:notification"
     });
     const wsBaseURL = baseURL.replace("http", "ws");
     const wsURL = `${wsBaseURL}/api/v1/streaming`;
     log.info({ msg: "Connecting to websocket", wsURL });
 
-    this.ws = new WebSocket(`${wsURL}?${params.toString()}`);
+    this.ws = new WebSocket(`${wsURL}?${params.toString()}`, {
+      headers: {
+        "User-Agent": config.get("userAgent"),
+      },
+    });
     this.ws.on("open", this.handleStreamingOpen.bind(this));
     this.ws.on("message", this.handleStreamingMessage.bind(this));
   }
@@ -39,13 +44,6 @@ export default class CommandStreaming extends BasePlugin {
     const { parent } = this;
     const log = this.logStreaming();
     log.trace({ msg: "open" });
-    this.ws.send(
-      JSON.stringify({
-        type: "subscribe",
-        stream: "user:notification",
-      })
-    );
-    log.info({ msg: "Subscribed to notifications" });
     parent.onStart();
   }
 
