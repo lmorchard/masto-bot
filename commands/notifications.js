@@ -2,7 +2,7 @@ const DATA_NAME = "notifications";
 
 import BasePlugin from "../plugins/base.js";
 
-export default class CommandStreaming extends BasePlugin {
+export default class CommandNotifications extends BasePlugin {
   /** @param {import("../index.js").default} parent */
   constructor(parent) {
     super(parent);

@@ -10,6 +10,5 @@ export default class BasePlugin {
     program.hook("preAction", this.preAction.bind(this));
   }
 
-  async preAction(command) {
-  }
+  async preAction(command) {}
 }
