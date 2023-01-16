@@ -1,3 +1,4 @@
+export { BasePlugin };
 export default class Mastotron {
     static configSchema: {};
     constructor(options: any);
@@ -37,6 +38,7 @@ export default class Mastotron {
     }): Promise<void>;
     onOther(type: any, payload: any): Promise<void>;
 }
+import BasePlugin from "./plugins/base.js";
 import Events from "./plugins/events.js";
 import { Command } from "commander";
 import ConfigPlugin from "./plugins/config.js";

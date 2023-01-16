@@ -10,6 +10,9 @@ import ClientPlugin from "./plugins/client.js";
 import BotPlugin from "./plugins/bot.js";
 import CommandsIndexPlugin from "./commands/index.js";
 
+import BasePlugin from "./plugins/base.js";
+export { BasePlugin };
+
 export default class Mastotron {
   static configSchema = {};
 
